@@ -13,6 +13,7 @@ public:
     void addVertexAtributeDescription(unsigned int index, unsigned int numElements,
  	                                  unsigned int elementType, bool normalized,
  	                                  int stride, const void * pointer);
+    void setUniformValue(const char* uniformName, float value[2]);
     void useProgram();
 private:
     static constexpr unsigned int INVALID_SHADER_ID = UINT_MAX;

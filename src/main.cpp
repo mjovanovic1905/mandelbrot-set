@@ -2,6 +2,7 @@
 #include <fstream>
 #include <string>
 #include <string_view>
+#include <vector>
 
 #include "GL/glew.h"
 #include "GLFW/glfw3.h"
@@ -13,7 +14,11 @@
 #include "include/IndexBuffer.h"
 #include "include/ShaderProgram.h"
 
-std::string read_file(std::string_view path) {
+static constexpr float SCREEN_WIDTH = 800.f;
+static constexpr float SCREEN_HEIGHT = 600.f;
+
+std::string read_file(std::string_view path)
+{
     constexpr auto read_size = std::size_t{4096};
     auto stream = std::ifstream{path.data()};
     stream.exceptions(std::ios_base::badbit);
@@ -36,33 +41,35 @@ int main()
     }
 
     Window mainWindow;
-    if (!mainWindow.init())
+    if (!mainWindow.init(SCREEN_WIDTH, SCREEN_HEIGHT))
     {
         releaseLibraryData();
         return -1;
     }
 
-    float vertices[] = {
-        0.5f,  0.5f, 0.0f,  // top right
-        0.5f, -0.5f, 0.0f,  // bottom right
-        -0.5f, -0.5f, 0.0f,  // bottom left
-        -0.5f,  0.5f, 0.0f   // top left 
+    std::vector<float> vertices =
+    {
+        1.0f,  1.0f, 0.0f,  // top right
+        1.0f, -1.0f, 0.0f,  // bottom right
+        -1.0f, -1.0f, 0.0f,  // bottom left
+        -1.0f,  1.0f, 0.0f   // top left 
     };
 
-    unsigned int indices[] = {  // note that we start from 0!
+    std::vector<unsigned int> indices =
+    { 
         0, 1, 3,   // first triangle
         1, 2, 3    // second triangle
-    };    
+    };
 
     VAO vao;
     vao.init();
     vao.bind();
 
     VertexBuffer vb;
-    vb.init(vertices, 12);
+    vb.init(vertices.data(), vertices.size());
 
     IndexBuffer ebo;
-    ebo.init(indices, 6); 
+    ebo.init(indices.data(), indices.size()); 
     
     ShaderProgram shaderProgram;
     if (!shaderProgram.init(read_file("./shaders/basic.vs").c_str(), read_file("./shaders/basic.fs").c_str()))
@@ -71,6 +78,8 @@ int main()
         return -1;
     }
     shaderProgram.addVertexAtributeDescription(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    float screenSize[2] = { SCREEN_WIDTH, SCREEN_HEIGHT };
+    shaderProgram.setUniformValue("screenSize", screenSize);
 
     while(!mainWindow.windowShouldClose())
     {
@@ -82,7 +91,7 @@ int main()
         shaderProgram.useProgram();
         vao.bind();
         ebo.bind();
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+        glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
         
         mainWindow.swapBuffers();
         glfwPollEvents();    

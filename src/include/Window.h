@@ -7,7 +7,7 @@ class Window
 {
 public:
     Window();
-    bool init();
+    bool init(float screenWidth, float screenHeight);
     void processInput();
     bool windowShouldClose() const;
     void swapBuffers();
