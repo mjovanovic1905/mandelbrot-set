@@ -1,0 +1,16 @@
+# Ignore all files
+*
+
+# Except these
+
+!/src
+!/src/*.*
+!/src/shaders
+!*.h
+!*.cpp
+!*.vs
+!*.fs
+!*.gs
+!*.shader
+!.gitignore
+!Makefile
