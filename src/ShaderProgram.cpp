@@ -75,6 +75,12 @@ void ShaderProgram::setUniformValue(const char* uniformName, float value[2])
     glUniform2f(uniformLocation, value[0], value[1]);
 }
 
+void ShaderProgram::setUniformValue(const char* uniformName, int value)
+{
+    int uniformLocation = glGetUniformLocation(m_shaderProgram, uniformName);
+    glUniform1i(uniformLocation, value);
+}
+
 void ShaderProgram::useProgram()
 {
     glUseProgram(m_shaderProgram);

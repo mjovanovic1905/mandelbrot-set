@@ -16,6 +16,7 @@
 
 static constexpr float SCREEN_WIDTH = 800.f;
 static constexpr float SCREEN_HEIGHT = 600.f;
+static constexpr int ITERATIONS = 100;
 
 std::string read_file(std::string_view path)
 {
@@ -77,9 +78,11 @@ int main()
         releaseLibraryData();
         return -1;
     }
+    shaderProgram.useProgram();
     shaderProgram.addVertexAtributeDescription(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
     float screenSize[2] = { SCREEN_WIDTH, SCREEN_HEIGHT };
-    shaderProgram.setUniformValue("screenSize", screenSize);
+    shaderProgram.setUniformValue("u_screenSize", screenSize);
+    shaderProgram.setUniformValue("u_maxIterations", ITERATIONS);
 
     while(!mainWindow.windowShouldClose())
     {
