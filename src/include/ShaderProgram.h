@@ -2,6 +2,7 @@
 #define _SHADER_PROGRAM_
 
 #include <climits>
+#include <glm/glm.hpp>
 
 class ShaderProgram
 {
@@ -13,8 +14,9 @@ public:
     void addVertexAtributeDescription(unsigned int index, unsigned int numElements,
  	                                  unsigned int elementType, bool normalized,
  	                                  int stride, const void * pointer);
-    void setUniformValue(const char* uniformName, float value[2]);
+    void setUniformValue(const char* uniformName, const glm::vec2& value);
     void setUniformValue(const char* uniformName, int value);
+    void setUniformValue(const char* uniformName, float value);
     void useProgram();
     
 private:

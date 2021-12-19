@@ -1,12 +1,13 @@
 #version 450 core
 
-#define ZOOM_CONSTANT 5.0 //at the start, the picture is too zoomed in, so we use this constant to zoom out
 #define THRESHOLD 4.0
 
 out vec4 FragColor;
 
 uniform vec2 u_screenSize;
 uniform int u_maxIterations;
+uniform float u_zoom;
+uniform vec2 u_offset;
 
 int findIterations(vec2 number)
 {
@@ -72,7 +73,7 @@ vec3 hsv2rgb(float h, float s, float v)
 
 void main()
 {
-    vec2 pos = (gl_FragCoord.xy / u_screenSize - 0.5) * ZOOM_CONSTANT;
+    vec2 pos = ((gl_FragCoord.xy - u_screenSize / 2) / u_zoom) - u_offset;
     int iterations = findIterations(pos);
 
     if (iterations < u_maxIterations)

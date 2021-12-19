@@ -16,7 +16,6 @@
 
 static constexpr float SCREEN_WIDTH = 800.f;
 static constexpr float SCREEN_HEIGHT = 600.f;
-static constexpr int ITERATIONS = 100;
 
 std::string read_file(std::string_view path)
 {
@@ -33,8 +32,16 @@ std::string read_file(std::string_view path)
     return out;
 }
 
-int main()
+int main(int argc, char* argv[])
 {
+    if (argc < 2)
+    {
+        std::cout << "Please pass the number of iterations\n";
+        return -1;
+    }
+
+    int iterations = atoi(argv[1]);
+
     if (!initLibraries())
     {
         releaseLibraryData();
@@ -42,7 +49,7 @@ int main()
     }
 
     Window mainWindow;
-    if (!mainWindow.init(SCREEN_WIDTH, SCREEN_HEIGHT))
+    if (!mainWindow.init(SCREEN_WIDTH, SCREEN_HEIGHT, iterations))
     {
         releaseLibraryData();
         return -1;
@@ -80,9 +87,7 @@ int main()
     }
     shaderProgram.useProgram();
     shaderProgram.addVertexAtributeDescription(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-    float screenSize[2] = { SCREEN_WIDTH, SCREEN_HEIGHT };
-    shaderProgram.setUniformValue("u_screenSize", screenSize);
-    shaderProgram.setUniformValue("u_maxIterations", ITERATIONS);
+    shaderProgram.setUniformValue("u_screenSize", glm::vec2(SCREEN_WIDTH, SCREEN_HEIGHT ));
 
     while(!mainWindow.windowShouldClose())
     {
@@ -92,6 +97,12 @@ int main()
         glClear(GL_COLOR_BUFFER_BIT);
 
         shaderProgram.useProgram();
+        glm::vec2 offset;
+        mainWindow.getOffset(offset);
+        shaderProgram.setUniformValue("u_offset", offset);
+        shaderProgram.setUniformValue("u_zoom", mainWindow.getZoom());
+        shaderProgram.setUniformValue("u_maxIterations", mainWindow.getIterations());
+
         vao.bind();
         ebo.bind();
         glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);

@@ -3,6 +3,7 @@
 #include <iostream>
 
 #include "GL/glew.h"
+#include <glm/gtc/type_ptr.hpp>
 
 ShaderProgram::ShaderProgram(/* args */)
 {
@@ -21,7 +22,7 @@ unsigned int ShaderProgram::createShader(const char* shaderSoruce, unsigned int 
     {
         char infoLog[512];
         glGetShaderInfoLog(shaderId, 512, NULL, infoLog);
-        std::cout << "ERROR::SHADER::COMPILATION_FAILED\n" << infoLog << '\n';
+        std::cout << "ERROR::SHADER::COMPILATION_FAILED\n" << shaderType << " - " << infoLog << '\n';
         return INVALID_SHADER_ID;
     }
 
@@ -69,16 +70,22 @@ void ShaderProgram::addVertexAtributeDescription(unsigned int index, unsigned in
     glEnableVertexAttribArray(index);
 }
 
-void ShaderProgram::setUniformValue(const char* uniformName, float value[2])
+void ShaderProgram::setUniformValue(const char* uniformName, const glm::vec2& value)
 {
     int uniformLocation = glGetUniformLocation(m_shaderProgram, uniformName);
-    glUniform2f(uniformLocation, value[0], value[1]);
+    glUniform2f(uniformLocation, value.x, value.y);
 }
 
 void ShaderProgram::setUniformValue(const char* uniformName, int value)
 {
     int uniformLocation = glGetUniformLocation(m_shaderProgram, uniformName);
     glUniform1i(uniformLocation, value);
+}
+
+void ShaderProgram::setUniformValue(const char* uniformName, float value)
+{
+    int uniformLocation = glGetUniformLocation(m_shaderProgram, uniformName);
+    glUniform1f(uniformLocation, value);
 }
 
 void ShaderProgram::useProgram()
