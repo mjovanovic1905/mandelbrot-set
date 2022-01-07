@@ -3,5 +3,7 @@
 
 bool initLibraries();
 void releaseLibraryData();
+void draw(int numIndices);
+void pollEvents();
 
 #endif

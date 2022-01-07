@@ -105,12 +105,12 @@ int main(int argc, char* argv[])
 
         vao.bind();
         ebo.bind();
-        glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
+        draw(indices.size());
         
         mainWindow.swapBuffers();
-        glfwPollEvents();    
+        pollEvents();
     }  
 
-    glfwTerminate();
+    releaseLibraryData();
     return 0;
 }

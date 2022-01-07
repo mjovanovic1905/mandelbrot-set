@@ -15,3 +15,13 @@ void releaseLibraryData()
 {
     glfwTerminate();
 }
+
+void draw(int numIndices)
+{
+    glDrawElements(GL_TRIANGLES, numIndices, GL_UNSIGNED_INT, 0);
+}
+
+void pollEvents()
+{
+    glfwPollEvents();
+}
